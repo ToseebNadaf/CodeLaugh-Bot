@@ -2,9 +2,11 @@ const { Telegraf } = require("telegraf");
 const axios = require("axios");
 const dotenv = require("dotenv");
 const algorithms = require("./algorithms.json");
+const express = require("express");
 
 dotenv.config();
 
+const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.start((ctx) =>
@@ -42,6 +44,14 @@ bot.command("algorithm", (ctx) => {
       `Algorithm "${algorithmName}" not found. Try "bubble sort", "quick sort", or "merge sort".`
     );
   }
+});
+
+app.get("/", (req, res) => {
+  res.send("CodeLaugh Bot is running!");
+});
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 bot.launch();
