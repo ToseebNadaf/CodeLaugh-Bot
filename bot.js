@@ -1,6 +1,7 @@
 const { Telegraf } = require("telegraf");
 const axios = require("axios");
 const dotenv = require("dotenv");
+const algorithms = require("./algorithms.json");
 
 dotenv.config();
 
@@ -25,40 +26,20 @@ bot.command("joke", async (ctx) => {
 });
 
 bot.command("algorithm", (ctx) => {
-  const algorithmName = ctx.message.text.split(" ").slice(1).join(" ");
-  const algorithms = {
-    "bubble sort": `
-    function bubbleSort(arr) {
-      let n = arr.length;
-      for (let i = 0; i < n-1; i++) {
-        for (let j = 0; j < n-i-1; j++) {
-          if (arr[j] > arr[j+1]) {
-            [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
-          }
-        }
-      }
-      return arr;
-    }`,
-    "quick sort": `
-    function quickSort(arr) {
-      if (arr.length <= 1) return arr;
-      const pivot = arr[0];
-      const left = [];
-      const right = [];
-      for (let i = 1; i < arr.length; i++) {
-        if (arr[i] < pivot) left.push(arr[i]);
-        else right.push(arr[i]);
-      }
-      return [...quickSort(left), pivot, ...quickSort(right)];
-    }`,
-  };
+  const algorithmName = ctx.message.text
+    .split(" ")
+    .slice(1)
+    .join(" ")
+    .toLowerCase();
+  const code = algorithms[algorithmName];
 
-  const code = algorithms[algorithmName.toLowerCase()];
   if (code) {
-    ctx.reply(`Here's the code for ${algorithmName}:\n${code}`);
+    ctx.replyWithMarkdownV2(
+      `*Here's the code for ${algorithmName}:*\n\`\`\`javascript\n${code}\n\`\`\``
+    );
   } else {
     ctx.reply(
-      `Algorithm "${algorithmName}" not found. Try "bubble sort" or "quick sort".`
+      `Algorithm "${algorithmName}" not found. Try "bubble sort", "quick sort", or "merge sort".`
     );
   }
 });
